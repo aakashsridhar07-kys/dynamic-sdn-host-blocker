@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dynamic-sdn-blocker"
+version = "0.1.0"
+description = "Lab-focused TCP SYN-rate detection and Open vSwitch host blocking"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+dependencies = []
+
+[project.optional-dependencies]
+capture = ["scapy>=2.5.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
