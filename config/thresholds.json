@@ -1,0 +1,11 @@
+{
+  "lab_cidr": "10.10.0.0/24",
+  "ignored_ips": ["10.10.0.100"],
+  "window_seconds": 5,
+  "syn_rate_threshold": 30,
+  "consecutive_windows": 2,
+  "block_seconds": 300,
+  "bridge": "br0",
+  "database": "data/security_events.db",
+  "event_log": "data/events.jsonl"
+}
