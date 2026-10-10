@@ -1,11 +1,18 @@
+import tempfile
 import unittest
+from pathlib import Path
 
 from dynamic_sdn_blocker.blocklist import Blocklist
 
 
 class TestBlocklist(unittest.TestCase):
     def setUp(self):
-        self.blocklist = Blocklist(":memory:")
+        self.temp_dir = tempfile.TemporaryDirectory()
+        database = Path(self.temp_dir.name) / "blocklist.sqlite3"
+        self.blocklist = Blocklist(str(database))
+
+    def tearDown(self):
+        self.temp_dir.cleanup()
 
     def test_block_and_unblock(self):
         self.blocklist.block("10.10.0.11", 60, "test threshold")
