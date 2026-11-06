@@ -23,7 +23,7 @@ Use the virtual environment; do not use `sudo pip`.
 With the virtual environment active:
 
 ```bash
-osken-manager controller.sdn_controller
+python -c "from os_ken.base.app_manager import AppManager; AppManager.run_apps(['controller.sdn_controller'])"
 ```
 
 The OpenFlow listener uses port 6653. The host management API listens only
