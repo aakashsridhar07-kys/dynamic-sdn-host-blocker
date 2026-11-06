@@ -48,6 +48,12 @@ See [`docs/controller.md`](docs/controller.md) for OS-Ken installation, controll
 
 Install the controller extra with `python -m pip install -e '.[controller]'`. Start the controller with `osken-manager controller.sdn_controller` before launching `sudo python3 topology/sdn_topology.py`.
 
+## TCP and UDP socket applications
+
+See [`docs/socket-app.md`](docs/socket-app.md) for the concurrent TCP server/client and UDP server/client, JSON message format, and Mininet test commands. The demo uses TCP port `9000` and UDP port `9001`, with the Mininet server at `10.20.0.10`.
+
+Install the project from the repository root with `python -m pip install -e .`. Run protocol tests with `PYTHONPATH=. python -m unittest tests.test_socket_protocol -v`.
+
 ## VirtualBox safety
 
 Use a separate named Internal Network for each endpoint-to-SDN-Core link. SDN-Core may use a separate NAT adapter for package downloads, but never add that NAT adapter to `br0`. Keep test traffic isolated. Use only systems you own or are authorized to test.
