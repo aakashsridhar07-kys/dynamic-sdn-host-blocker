@@ -46,7 +46,7 @@ After validating the isolated topology, add `--enforce` to enable OVS rules. Ins
 
 See [`docs/controller.md`](docs/controller.md) for OS-Ken installation, controller startup, Mininet commands, and the local block/unblock API. The Mininet test network uses `10.20.0.0/24`, separate from the existing VirtualBox lab network.
 
-Install the controller extra with `python -m pip install -e '.[controller]'`. Start the controller with `osken-manager controller/sdn_controller.py` before launching `sudo .venv/bin/python topology/sdn_topology.py`.
+Install the controller extra with `python -m pip install -e '.[controller]'`. Start the controller with `osken-manager controller.sdn_controller` before launching `sudo .venv/bin/python topology/sdn_topology.py`.
 
 ## VirtualBox safety
 
