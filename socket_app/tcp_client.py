@@ -17,10 +17,10 @@ def main():
     request = make_request(args.message)
     with socket.create_connection((args.host, args.port), timeout=args.timeout) as sock:
         sock.settimeout(args.timeout)
-        sock.sendall(encode_message(request) + b"\\n")
+        sock.sendall(encode_message(request) + b"\n")
         stream = sock.makefile("rb")
         line = stream.readline(4098)
-        if not line or not line.endswith(b"\\n"):
+        if not line or not line.endswith(b"\n"):
             raise RuntimeError("server closed connection or returned an invalid frame")
         print(decode_message(line[:-1]))
 
