@@ -40,7 +40,7 @@ curl http://127.0.0.1:8080/health
 In a second terminal, from the repository root:
 
 ```bash
-sudo .venv/bin/python topology/sdn_topology.py
+sudo python3 topology/sdn_topology.py
 ```
 
 At the Mininet prompt:
