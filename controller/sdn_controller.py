@@ -26,7 +26,7 @@ from os_ken.controller.handler import (
 from os_ken.lib.packet import ether_types, ethernet, ipv4, packet
 from os_ken.ofproto import ofproto_v1_3
 
-from security_policy import normalize_ipv4, validate_block_seconds
+from controller.security_policy import normalize_ipv4, validate_block_seconds
 
 LOG = logging.getLogger("dynamic_sdn_controller")
 BLOCK_COOKIE = 0xD1A0B10C00000001
