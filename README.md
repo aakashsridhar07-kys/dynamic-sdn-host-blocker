@@ -2,7 +2,7 @@
 
 A lab-focused Python prototype for detecting abnormal TCP SYN rates and responding with Open vSwitch (OVS) drop rules in an isolated Oracle VirtualBox environment.
 
-> Status: starter/MVP. SYN-rate detection, SQLite blocklist, JSONL event logging, OVS rule adapter, flow-counter rate helper, unit tests, and CI are included. A dedicated OpenFlow controller and live switch flow-statistics polling remain planned integration work.
+> Status: prototype in progress. Includes SYN-rate detection, SQLite blocklist, JSONL event logging, an OVS rule adapter, a Mininet OpenFlow 1.3 topology, and an OS-Ken controller with a localhost host-blocking API. Live end-to-end controller behavior still requires validation in the Ubuntu lab VM.
 
 ## Features
 
@@ -41,6 +41,12 @@ sudo .venv/bin/python -m dynamic_sdn_blocker.monitor --config config/thresholds.
 ```
 
 After validating the isolated topology, add `--enforce` to enable OVS rules. Inspect them with `sudo ovs-ofctl -O OpenFlow13 dump-flows br0`.
+
+## Mininet and SDN controller
+
+See [`docs/controller.md`](docs/controller.md) for OS-Ken installation, controller startup, Mininet commands, and the local block/unblock API. The Mininet test network uses `10.20.0.0/24`, separate from the existing VirtualBox lab network.
+
+Install the controller extra with `python -m pip install -e '.[controller]'`. Start the controller with `osken-manager controller/sdn_controller.py` before launching `sudo .venv/bin/python topology/sdn_topology.py`.
 
 ## VirtualBox safety
 
