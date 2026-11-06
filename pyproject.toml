@@ -13,6 +13,7 @@ dependencies = []
 
 [project.optional-dependencies]
 capture = ["scapy>=2.5.0"]
+controller = ["os-ken>=2.6.0"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
