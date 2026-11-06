@@ -24,17 +24,17 @@ class TCPHandler(socketserver.StreamRequestHandler):
             line = self.rfile.readline(MAX_MESSAGE_BYTES + 2)
             if not line:
                 break
-            if len(line) > MAX_MESSAGE_BYTES + 1 or not line.endswith(b"\\n"):
+            if len(line) > MAX_MESSAGE_BYTES + 1 or not line.endswith(b"\n"):
                 LOG.warning("Rejected oversized or unterminated TCP frame from %s", peer)
                 break
             try:
                 request = decode_message(line[:-1])
                 response = make_response(request)
-                self.wfile.write(encode_message(response) + b"\\n")
+                self.wfile.write(encode_message(response) + b"\n")
                 self.wfile.flush()
             except ValueError as exc:
                 error = {"status": "error", "error": str(exc)}
-                self.wfile.write(encode_message(error) + b"\\n")
+                self.wfile.write(encode_message(error) + b"\n")
                 self.wfile.flush()
         LOG.info("TCP client disconnected: %s", peer)
 
