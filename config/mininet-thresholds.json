@@ -1,0 +1,11 @@
+{
+  "lab_cidr": "10.20.0.0/24",
+  "ignored_ips": ["10.20.0.10"],
+  "window_seconds": 5,
+  "syn_rate_threshold": 30,
+  "consecutive_windows": 2,
+  "block_seconds": 120,
+  "controller_url": "http://127.0.0.1:8080",
+  "database": "data/mininet_security_events.db",
+  "event_log": "data/mininet_events.jsonl"
+}
