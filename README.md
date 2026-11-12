@@ -3,13 +3,11 @@
 A lab-focused Python prototype for detecting abnormal TCP SYN rates and
 responding with OpenFlow drop rules in an isolated VirtualBox and Mininet lab.
 
-> Status: the OS-Ken controller and Mininet OpenFlow 1.3 topology have been
-> exercised in the Ubuntu lab. Three Mininet hosts communicate, a selected
-> host can be blocked through the controller API, unaffected hosts remain
-> reachable, and connectivity returns after unblocking. TCP/UDP socket
-> programs and transport tests are included. Automatic multi-interface SYN
-> monitoring now has a controller API integration path; live packet-capture
-> enforcement still needs verification in the user's VM.
+> Status: the Ubuntu Mininet lab has demonstrated end-to-end automatic SYN
+> detection, JSONL event logging, controller-driven host blocking, selective
+> blocking (h1 blocked while h2 remains reachable), and automatic recovery
+> after the temporary OpenFlow rule expires. TCP and UDP socket communication
+> between Mininet hosts has also been tested successfully.
 
 ## Features
 
@@ -19,6 +17,7 @@ responding with OpenFlow drop rules in an isolated VirtualBox and Mininet lab.
 - SQLite temporary blocklist and JSON Lines security event log
 - Alert-only by default; optional controller API or direct OVS enforcement
 - OS-Ken OpenFlow 1.3 controller with manual block/unblock API
+- Automatic temporary IPv4 source blocking through the controller API
 - Concurrent TCP and UDP socket client/server examples
 - Unit tests and GitHub Actions
 
@@ -73,6 +72,23 @@ TCP/UDP servers and clients, JSON message format, and Mininet test commands.
 The demo uses TCP port `9000` and UDP port `9001`, with the Mininet server
 at `10.20.0.10`.
 
+## Verified Mininet demonstration
+
+The following behaviors have been exercised in the Ubuntu VM:
+
+- Three-host Mininet topology and controller connectivity.
+- TCP and UDP client/server requests between h1/h2 and h3.
+- SYN detection from h1 and a corresponding JSONL detection event.
+- Automatic controller API enforcement against h1.
+- h1 blocked while h2 retained connectivity.
+- h1 connectivity restored after the temporary OpenFlow rule expired.
+
+The normal Mininet configuration uses 30 SYN/s, a 5-second window, two
+consecutive qualifying windows, and a 120-second block. A separate local
+test configuration was used for the short-duration functional demonstration;
+it is not committed as the default configuration. See
+[Mininet validation notes](mininet-validation.md).
+
 ## VirtualBox safety
 
 Use separate named Internal Networks for endpoint-to-SDN-Core links. SDN-Core
@@ -84,8 +100,9 @@ are authorized to test.
 
 Detection is based on initial TCP SYN rate and captures only the interfaces
 specified to one monitor process. Enforcement drops IPv4 traffic from the
-detected source. Live flow-statistics polling and automatic expiry
-reconciliation between the standalone SQLite blocklist and controller state
-remain future work. See [roadmap](docs/roadmap.md).
+detected source. The standalone SQLite blocklist and controller's temporary
+flow state are separate; automatic reconciliation between their expiry
+records remains future work. Live flow-statistics polling, IPv6 support and
+deployment hardening are also future work. See [roadmap](docs/roadmap.md).
 
 MIT licensed. See `LICENSE`.
