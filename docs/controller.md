@@ -27,6 +27,15 @@ With the virtual environment active:
 python -c "from os_ken.base.app_manager import AppManager; AppManager.run_apps(['controller.sdn_controller'])"
 ```
 
+If shell quoting is inconvenient, this equivalent interactive Python method
+also works:
+
+```python
+from os_ken.base.app_manager import AppManager
+import controller.sdn_controller
+AppManager.run_apps([controller.sdn_controller.__name__])
+```
+
 The OpenFlow listener uses port 6653. The management API listens only on
 `127.0.0.1:8080`. Check it from another terminal:
 
@@ -83,11 +92,12 @@ and writes to separate database and JSONL files:
 Find the switch-facing interfaces from a host terminal while Mininet is up:
 
 ```bash
-ip -o link show | grep -o 's1-eth[0-9]*'
+ip -br link
+sudo ovs-vsctl list-ports s1
 ```
 
 Start with alert-only mode. Replace the example interface names with those
-shown by the command above:
+shown by the commands above:
 
 ```bash
 sudo .venv/bin/python -m dynamic_sdn_blocker.monitor \
@@ -126,7 +136,7 @@ curl http://127.0.0.1:8080/v1/blocks
 
 The API binds to loopback only and has no authentication. Do not expose port
 8080 to an untrusted network. Run SYN-rate tests only inside the isolated
-Mininet lab. Tune the threshold against normal traffic before enforcement.
+Mininet lab. Tune thresholds against normal traffic before enforcement.
 
 ## API
 
@@ -135,11 +145,30 @@ Mininet lab. Tune the threshold against normal traffic before enforcement.
 - `POST /v1/blocks`: JSON body `{"ip":"10.20.0.1","block_seconds":300}`.
 - `DELETE /v1/blocks/{ipv4}`: remove a block.
 
-## Scope and verification
+## Verified Mininet results
+
+The Ubuntu VM demonstration verified:
+
+- The controller connected to Mininet switch `s1`, and `pingall` succeeded.
+- TCP and UDP socket clients communicated with the h3 server.
+- Scapy captured initial SYN traffic from h1 (`10.20.0.1`).
+- The detector emitted an alert and wrote a detection record to
+  `data/mininet_events.jsonl`.
+- With enforcement enabled and a separate short-duration test config, the
+  monitor reported `[BLOCKED]` and the controller applied the block.
+- h1 was blocked while h2 remained able to communicate with h3.
+- h1 connectivity returned after the temporary rule expired.
+
+The short-duration functional test used a separate local configuration.
+The committed `config/mininet-thresholds.json` remains at 30 SYN/s, a
+5-second window, two consecutive qualifying windows, and a 120-second block.
+See [Mininet validation notes](mininet-validation.md).
+
+## Scope and limitations
 
 The controller provides a basic MAC-learning switch and IPv4 source blocking.
 The monitor can capture multiple interfaces in one process and call the
-controller API for enforcement. Verify automatic detection and expiry in the
-Ubuntu VM with live OS-Ken, OVS and Mininet; these changes have unit tests for
-the HTTP client but are not a substitute for live packet-capture testing.
+controller API for enforcement. The controller's temporary OpenFlow rule
+expiry was demonstrated in the Mininet VM. Reconciliation of the separate
+SQLite blocklist expiry state with controller flow state is not implemented.
 This is a lab prototype, not a production network controller.
